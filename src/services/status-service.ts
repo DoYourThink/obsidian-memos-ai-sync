@@ -47,9 +47,18 @@ export class StatusService {
             }
         }
 
-        this.statusBarItem.empty();
-        setIcon(this.statusBarItem.createSpan(), icon);
-        this.statusBarItem.createSpan({ text: ` ${text}` });
+        // 清空状态栏
+        this.statusBarItem.innerHTML = '';
+        
+        // 创建图标元素
+        const iconSpan = document.createElement('span');
+        this.statusBarItem.appendChild(iconSpan);
+        setIcon(iconSpan, icon);
+        
+        // 创建文本元素
+        const textSpan = document.createElement('span');
+        textSpan.textContent = ` ${text}`;
+        this.statusBarItem.appendChild(textSpan);
     }
 
     startSync(totalItems: number) {

@@ -4,18 +4,16 @@ export type AIModelType = 'openai' | 'gemini' | 'claude' | 'ollama';
 // Memo 项目接口
 export interface MemoItem {
     name: string;
-    uid: string;
     content: string;
     visibility: string;
     createTime: string;
     updateTime: string;
     displayTime: string;
     creator: string;
-    rowStatus: string;
+    state: string;
     pinned: boolean;
-    resources: Array<{
+    attachments: Array<{
         name: string;
-        uid: string;
         filename: string;
         type: string;
         size: string;

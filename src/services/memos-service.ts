@@ -38,14 +38,14 @@ export class MemosService {
                 const url = `${baseUrl}/memos`;
 
                 // 构建请求参数
-                const params = new URLSearchParams({
-                    'rowStatus': 'NORMAL',
-                    'limit': pageSize.toString()
-                });
+            const params = new URLSearchParams({
+                'state': 'NORMAL',
+                'pageSize': pageSize.toString()
+            });
 
-                if (pageToken) {
-                    params.set('pageToken', pageToken);
-                }
+            if (pageToken) {
+                params.set('pageToken', pageToken);
+            }
 
                 const finalUrl = `${url}?${params.toString()}`;
                 this.logger.debug('请求 URL:', finalUrl);
@@ -104,24 +104,37 @@ export class MemosService {
 
     async downloadResource(resource: { name: string; filename: string; type?: string }): Promise<ArrayBuffer | null> {
         try {
-            const resourceId = resource.name.split('/').pop() || resource.name;
-            const resourceUrl = `${this.apiUrl.replace('/api/v1', '')}/file/resources/${resourceId}/${encodeURIComponent(resource.filename)}`;
+            // 从 resource.name 中提取 attachment ID
+            // resource.name 格式: attachments/{attachment_id}
+            const attachmentId = resource.name.split('/').pop() || resource.name;
+            const resourceUrl = `${this.apiUrl.replace('/api/v1', '')}/file/attachments/${attachmentId}/${encodeURIComponent(resource.filename)}`;
 
             this.logger.debug(`正在下载资源: ${resourceUrl}`);
 
             const response = await requestUrl({
                 url: resourceUrl,
                 headers: {
-                    'Authorization': `Bearer ${this.accessToken}`
-                }
+                    'Authorization': `Bearer ${this.accessToken}`,
+                    'Accept': '*/*'
+                },
+                method: 'GET'
             });
 
             if (response.status !== 200) {
                 this.logger.error(`下载资源失败: ${response.status}`);
+                this.logger.error(`响应内容: ${response.text}`);
                 return null;
             }
 
-            return response.arrayBuffer;
+            // 检查是否有 arrayBuffer 属性
+            if ('arrayBuffer' in response && response.arrayBuffer) {
+                this.logger.debug(`成功获取资源，大小: ${response.arrayBuffer.byteLength} 字节`);
+                return response.arrayBuffer;
+            } else {
+                // 如果没有 arrayBuffer，尝试使用其他方式获取二进制数据
+                this.logger.warn('响应中没有 arrayBuffer 属性');
+                return null;
+            }
         } catch (error) {
             this.logger.error('下载资源时出错:', error);
             return null;

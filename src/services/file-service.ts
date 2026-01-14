@@ -158,9 +158,9 @@ export class FileService {
             
             let documentContent = content;
 
-            if (memo.resources && memo.resources.length > 0) {
-                const images = memo.resources.filter(r => this.isImageFile(r.filename));
-                const otherFiles = memo.resources.filter(r => !this.isImageFile(r.filename));
+            if (memo.attachments && memo.attachments.length > 0) {
+                const images = memo.attachments.filter(r => this.isImageFile(r.filename));
+                const otherFiles = memo.attachments.filter(r => !this.isImageFile(r.filename));
 
                 if (images.length > 0) {
                     documentContent += '\n\n';

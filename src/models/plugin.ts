@@ -1,8 +1,14 @@
 import { Plugin } from 'obsidian';
-import { MemosPluginSettings } from './settings';
+import { MemosPluginSettings, DEFAULT_SETTINGS } from './settings';
 
-export default interface MemosSyncPlugin extends Plugin {
+export default class MemosSyncPlugin extends Plugin {
     settings: MemosPluginSettings;
-    loadSettings(): Promise<void>;
-    saveSettings(): Promise<void>;
+
+    async loadSettings(): Promise<void> {
+        this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
+    }
+
+    async saveSettings(): Promise<void> {
+        await this.saveData(this.settings);
+    }
 } 
