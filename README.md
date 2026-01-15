@@ -4,5 +4,6 @@
 
 因为不支持memos 0.25之后的版本API，同步后只同步文字，不同步图片，而且作者似乎断更了，所以我临时用AI更新了一个支持0.25之后版本的，大家不嫌弃的话，请自取。
 
-下载项目中的main.js和manifest.json，然后覆盖到obsidian知识库的.obsidian\plugins\memos-ai-sync文件夹中即可。
+只需下载项目中的main.js文件，然后覆盖到obsidian知识库的.obsidian\plugins\memos-ai-sync文件夹中即可。
+
 
